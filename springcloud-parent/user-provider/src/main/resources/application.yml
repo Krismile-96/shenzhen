@@ -1,0 +1,38 @@
+server:
+  port: 18081
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password:
+    url: jdbc:mysql://127.0.0.1:3306/springcloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+  application:
+    name: user-provider #服务的名字
+#指定eureka服务地址
+eureka:
+  client:
+    service-url:
+      # EurekaServer的地址
+      defaultZone: http://localhost:7001/eureka
+    #每隔30秒获取服务中心列表
+    registry-fetch-interval-seconds: 30
+  instance:
+    #指定IP地址
+    ip-address: 127.0.0.1
+    #访问服务的时候，推荐使用IP
+    prefer-ip-address: true
+    #租约到期，服务时效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 90
+    #租约续约间隔时间，默认30秒
+    lease-renewal-interval-in-seconds: 30
+
+# 修改服务地址轮询策略，默认是轮询，配置之后变随机
+user-provider:
+  ribbon:
+    #轮询
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    ConnectTimeout: 10000 # 连接超时时间
+    ReadTimeout: 2000 # 数据读取超时时间
+    MaxAutoRetries: 1 # 最大重试次数(第一个服务)
+    MaxAutoRetriesNextServer: 0 # 最大重试下一个服务次数(集群的情况才会用到)
+    OkToRetryOnAllOperations: false # 无论是请求超时或者socket read timeout都进行重试
